@@ -6,6 +6,9 @@ import '../services/api_service.dart';
 class ChatProvider with ChangeNotifier {
   List<ChatModel> chatList = [];
   List<ChatModel> get getChatList {
+    if(chatList.isNotEmpty) {
+      chatList[0] = ChatModel(msg: "Привет!", chatIndex: 0);
+    }
     return chatList;
   }
 

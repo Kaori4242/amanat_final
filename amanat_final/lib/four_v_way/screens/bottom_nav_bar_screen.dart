@@ -1,4 +1,3 @@
-import 'package:amanat_final/four_v_way/screens/chat_screen.dart';
 import 'package:amanat_final/four_v_way/screens/expert_screen.dart';
 import 'package:amanat_final/four_v_way/screens/stories_screen.dart';
 import 'package:flutter/material.dart';
@@ -15,7 +14,7 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
   int _selectedIndex = 0;
 
   static const List<Widget> _widgetOptions = <Widget>[
-    ChatScreen(),
+    // ChatScreen(),
     ExpertScreen(),
     StoriesScreen(),
   ];
@@ -26,26 +25,22 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
       bottomNavigationBar: Container(
         color: Colors.black,
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
+          padding: const EdgeInsets.symmetric(horizontal: 70, vertical: 5),
           child: GNav(
-              gap: 20,
+              gap: 40,
               backgroundColor: Colors.black,
               color: Colors.white,
               activeColor: Colors.white,
               tabBackgroundColor: Colors.grey.shade800,
               padding: const EdgeInsets.all(16),
-              tabs: const [
+              tabs: [
                 GButton(
-                  icon: Icons.search,
-                  text: "Chat",
+                  icon: Icons.chat,
+                  text: "Чат",
                 ),
                 GButton(
-                  icon: Icons.home,
-                  text: "Expert",
-                ),
-                GButton(
-                  icon: Icons.delete,
-                  text: "Stories",
+                  icon: Icons.circle_notifications_outlined,
+                  text: "Истории",
                 ),
               ],
               selectedIndex: _selectedIndex,

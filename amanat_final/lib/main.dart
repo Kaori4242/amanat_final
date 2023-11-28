@@ -31,7 +31,6 @@ import 'package:amanat_final/four_v_way/constants/constants.dart';
 import 'package:amanat_final/four_v_way/providers/chats_provider.dart';
 import 'package:amanat_final/four_v_way/providers/models_provider.dart';
 import 'package:amanat_final/four_v_way/screens/bottom_nav_bar_screen.dart';
-import 'package:amanat_final/four_v_way/screens/chat_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

@@ -10,6 +10,8 @@ import 'package:provider/provider.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 import 'dart:developer';
 
+import '../widgets/start_button.dart';
+
 class ExpertScreen extends StatefulWidget {
   const ExpertScreen({super.key});
 
@@ -26,8 +28,8 @@ class _ExpertScreenState extends State<ExpertScreen> {
 
   stt.SpeechToText _speech = stt.SpeechToText();
   bool _isListening = false;
-  String _text = 'Press the button and start speaking';
-  double _confidence = 1.0;
+  // String _text = 'Press the button and start speaking';
+  // double _confidence = 1.0;
 
   @override
   void initState() {
@@ -46,129 +48,127 @@ class _ExpertScreenState extends State<ExpertScreen> {
     super.dispose();
   }
 
-  void _listen() async {
-    if (!_isListening) {
-      bool available = await _speech.initialize(
-        onStatus: (val) => print('onStatus: $val'),
-        onError: (val) => print('onError: $val'),
-      );
-      if (available) {
-        setState(() => _isListening = true);
-        _speech.listen(
-          onResult: (val) => setState(() {
-            _text = val.recognizedWords;
-            if (val.hasConfidenceRating && val.confidence > 0) {
-              _confidence = val.confidence;
-            }
-          }),
-        );
-      }
-    } else {
-      setState(() => _isListening = false);
-      _speech.stop();
-    }
-  }
+  // void _listen() async {
+  //   if (!_isListening) {
+  //     bool available = await _speech.initialize(
+  //       onStatus: (val) => print('onStatus: $val'),
+  //       onError: (val) => print('onError: $val'),
+  //     );
+  //     if (available) {
+  //       setState(() => _isListening = true);
+  //       _speech.listen(
+  //         onResult: (val) => setState(() {
+  //           _text = val.recognizedWords;
+  //           if (val.hasConfidenceRating && val.confidence > 0) {
+  //             _confidence = val.confidence;
+  //           }
+  //         }),
+  //       );
+  //     }
+  //   } else {
+  //     setState(() => _isListening = false);
+  //     _speech.stop();
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
     final modelsProvider = Provider.of<ModelsProvider>(context);
     final chatProvider = Provider.of<ChatProvider>(context);
     return Scaffold(
+      backgroundColor: Colors.black,
       appBar: AppBar(
+        centerTitle: true,
         elevation: 2,
-        // leading: Padding(
-        //   padding: const EdgeInsets.all(8.0),
-        //   child: Image.asset(AssetsManager.openaiLogo),
-        // ),
-        title: const Text("Pied Piper"),
+        title: const Text("Azattyq", style: TextStyle(color: Colors.white,
+          fontSize: 16,
+          fontWeight: FontWeight.w600,
+          ),
+        ),
         actions: [
-          // StartButton(
-          //   isTyping: _isTyping,
-          //   textEditingController: textEditingController,
-          //   focusNode: focusNode,
-          // ),
-          ElevatedButton(
-            child: AvatarGlow(
-              animate: _isListening,
-              glowColor: Theme.of(context).primaryColor,
-              endRadius: 75.0,
-              duration: const Duration(milliseconds: 2000),
-              repeatPauseDuration: const Duration(milliseconds: 100),
-              repeat: true,
-              child: FloatingActionButton(
-                onPressed: _listen,
-                child: Icon(_isListening ? Icons.mic : Icons.mic_none),
-              ),
-            ),
-            onPressed: () {
-              textEditingController.text = _text;
-            },
+          StartButton(
+            isTyping: _isTyping,
+            textEditingController: textEditingController,
+            focusNode: focusNode,
           ),
         ],
       ),
       body: SafeArea(
-        child: Column(
-          children: [
-            Flexible(
-              child: ListView.builder(
-                controller: _listScrollController,
-                itemCount: chatProvider.getChatList.length,
-                itemBuilder: (context, index) {
-                  return ChatWidget(
-                    msg: chatProvider.getChatList[index].msg,
-                    chatIndex: chatProvider.getChatList[index].chatIndex,
-                    shouldAnimate: chatProvider.getChatList.length - 1 == index,
-                  );
-                },
+        child: Container(
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage("assets/images/chat_background.png"),
+                fit: BoxFit.cover,
               ),
             ),
-            if (_isTyping) ...[
-              const SpinKitThreeBounce(
-                color: Colors.white,
-                size: 18,
-              ),
-            ],
-            const SizedBox(
-              height: 15,
-            ),
-            Material(
-              color: cardColor,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: TextField(
-                        focusNode: focusNode,
-                        style: const TextStyle(color: Colors.white),
-                        controller: textEditingController,
-                        onSubmitted: (value) async {
-                          await sendMessageFCT(
-                              modelsProvider: modelsProvider,
-                              chatProvider: chatProvider);
-                        },
-                        decoration: const InputDecoration.collapsed(
-                            hintText: "How can I help you",
-                            hintStyle: TextStyle(color: Colors.grey)),
-                      ),
-                    ),
-                    IconButton(
-                      onPressed: () async {
-                        await sendMessageFCT(
-                          modelsProvider: modelsProvider,
-                          chatProvider: chatProvider,
-                        );
-                      },
-                      icon: const Icon(
-                        Icons.send,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ],
+          child: Column(
+            children: [
+              Flexible(
+                child: ListView.builder(
+                  controller: _listScrollController,
+                  itemCount: chatProvider.getChatList.length,
+                  itemBuilder: (context, index) {
+                    return ChatWidget(
+                      msg: chatProvider.getChatList[index].msg,
+                      chatIndex: chatProvider.getChatList[index].chatIndex,
+                      shouldAnimate: chatProvider.getChatList.length - 1 == index,
+                    );
+                  },
                 ),
               ),
-            ),
-          ],
+              if (_isTyping) ...[
+                const SpinKitThreeBounce(
+                  color: Colors.white,
+                  size: 18,
+                ),
+              ],
+              const SizedBox(
+                height: 15,
+              ),
+              Material(
+                color: cardColor,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: TextField(
+                          focusNode: focusNode,
+                          style: const TextStyle(color: Colors.white),
+                          controller: textEditingController,
+                          onSubmitted: (value) async {
+                            await sendMessageFCT(
+                                modelsProvider: modelsProvider,
+                                chatProvider: chatProvider);
+                          },
+                          decoration: const InputDecoration.collapsed(
+                              hintText: "Напишите Сообщение",
+                              hintStyle: TextStyle(color: Colors.grey)),
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: () async {
+                          await sendMessageFCT(
+                            modelsProvider: modelsProvider,
+                            chatProvider: chatProvider,
+                          );
+                        },
+                        icon: const Icon(
+                          Icons.send,
+                          color: Colors.white,
+                        ),
+                      ),
+                      // StartButton(
+                      //   isTyping: _isTyping,
+                      //   textEditingController: textEditingController,
+                      //   focusNode: focusNode,
+                      // ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -217,10 +217,6 @@ class _ExpertScreenState extends State<ExpertScreen> {
       });
       await chatProvider.sendMessageAndGetAnswers(
           msg: msg, chosenModelId: modelsProvider.getCurrentModel);
-      // chatList.addAll(await ApiService.sendMessage(
-      //   message: textEditingController.text,
-      //   modelId: modelsProvider.getCurrentModel,
-      // ));
       setState(() {});
     } catch (error) {
       log("error $error");
